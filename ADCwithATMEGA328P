@@ -1,0 +1,48 @@
+/*
+ * PWM.cpp
+ *
+ * Created: 7/18/2019 1:18:18 PM
+ * Author : Fidel
+ */ 
+#define F_CPU 16000000L
+#include <avr/io.h>
+#include <avr/interrupt.h>
+double dutyCycle=20;
+
+//conversion functions
+void startConversion(){
+	ADCSRA |=(1<<ADSC);
+}
+//set up ADC libraries
+void setupADC(){
+	ADMUX=(1<<REFS0)|(1<<MUX0)|(1<<MUX2);
+	ADCSRA=(1<<ADEN)|(1<<ADIE)|(1<<ADPS0)|(1<<ADPS1)|(1<<ADPS2);
+	DIDR0=(1<<ADC5D);//disable digital input buffer
+	startConversion();
+}
+
+int main(void)
+{
+	DDRD=(1<<PORTD6);
+	TCCR0A=(1<<COM0A1)|(1<<WGM00)|(1<<WGM01);
+	TIMSK0=(1<<TOIE0);
+	setupADC();
+	sei();
+	TCCR0B=(1<<CS00);
+	
+    /* Replace with your application code */
+    while (1) 
+    {
+    }
+}
+
+
+ISR(TIMER0_OVF_vect)
+{
+	OCR0A=dutyCycle;
+}
+// adc isr
+ISR(ADC_vect){
+	dutyCycle=ADC;
+	startConversion();
+}
