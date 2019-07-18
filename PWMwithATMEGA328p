@@ -1,0 +1,33 @@
+/*
+ * PWM.cpp
+ *
+ * Created: 7/18/2019 1:18:18 PM
+ * Author : Fidel
+ */ 
+#define F_CPU 16000000L
+#include <avr/io.h>
+#include <avr/interrupt.h>
+double dutyCycle=20;
+int main(void)
+{
+	DDRD=(1<<PORTD6);
+	TCCR0A=(1<<COM0A1)|(1<<WGM00)|(1<<WGM01);
+	TIMSK0=(1<<TOIE0);
+	OCR0A=(dutyCycle/100)*255;
+	sei();
+	TCCR0B=(1<<CS00);
+	
+    /* Replace with your application code */
+    while (1) 
+    {
+		dutyCycle++;
+		if(dutyCycle>100)
+		{
+			dutyCycle=20;
+		}
+    }
+}
+ISR(TIMER0_OVF_vect)
+{
+	OCR0A=(dutyCycle/100)*255;
+}
