@@ -1,0 +1,31 @@
+/*
+ * Timers.cpp
+ *
+ * Created: 7/16/2019 1:13:17 PM
+ * Author : Fidel
+ */ 
+
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+int extertnal=0;
+int main(void)
+{
+	DDRB=0x01;
+	TCCR0A=(1<<WGM01);// set CTC
+	OCR0A=195;
+	TIMSK0=(1<<OCIE0A);
+	sei();
+	TCCR0B=(1<<CS02)|(1<<CS00);// prescaler of 1024
+    /* Replace with your application code */
+    while (1) 
+    {
+    }
+}
+
+ISR(TIMER0_COMPA_vect){
+	extertnal++;
+	if(extertnal>100){
+		PORTB^=(1<<PORTB0);
+	}
+}
