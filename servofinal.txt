@@ -1,0 +1,67 @@
+#include<Servo.h>
+
+//create object of class servo
+Servo servo;
+Servo servo1;
+Servo servo2;
+Servo servo3;
+
+//initialize joysticks' inputs
+int x_axis= 0;
+int y_axis=1;
+int x2_axis=2;
+int y2_axis=3;
+
+
+
+int joyVal;
+
+void setup()
+
+{
+
+ //attach servo pins
+servo.attach(5);
+servo1.attach(3);
+servo2.attach(7);
+servo3.attach(8);
+
+pinMode(A0,INPUT);
+pinMode(A1,INPUT);
+pinMode(A2,INPUT);
+pinMode(A3,INPUT);
+
+
+
+
+}
+
+void loop()
+
+{
+
+//base
+joyVal=analogRead(x_axis);
+joyVal=map(joyVal,0,1023,0,180);
+servo.write(joyVal);
+
+//gripper
+joyVal=analogRead(y_axis);
+joyVal=map(joyVal,0,1023,0,180);
+servo1.write(joyVal);
+
+//first arm
+joyVal=analogRead(x2_axis);
+joyVal=map(joyVal,0,1023,0,180);
+
+servo2.write(joyVal);
+
+//second arm
+joyVal=analogRead(y2_axis);
+joyVal=map(joyVal,0,1023,0,180);
+
+servo3.write(joyVal);
+
+delay(15);
+
+}
